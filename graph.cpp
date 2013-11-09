@@ -6,6 +6,7 @@
 
 #include "graph.hpp"
 #include "vertex.hpp"
+#include "priority_queue.hpp"
 
 Graph::Graph(std::ifstream& fp) : numEdges(0)
 {
@@ -145,10 +146,82 @@ void Graph::resetMSTSpecificInfo()
 {
 }
 
-void Graph::getJarnikPrimMST(int& mstCost, std::vector<std::string>& vMSTVertices)
+void Graph::updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator>& openSet, std::string& newlyClosedVertex)
 {
+    for (auto i : vertices[newlyClosedVertex].getEdges())
+    {
+        if (vertices[i.first].isInClosedSet())
+        {
+            continue;
+        }
+        else if (vertices[i.first].isInOpenSet())
+        {
+            if (i.second.getCost() < vertices[i.first].getAssocCost())
+            {
+                vertices[i.first].setAssocCost(i.second.getCost());
+std::cout << "updated " << i.first << " (" << i.second.getCost() << ")" << std::endl;
+            }
+        }
+        else
+        {
+            vertices[i.first].addToOpenSet();
+            vertices[i.first].setAssocCost(i.second.getCost());
+            openSet.push(vertices[i.first]);
+std::cout << "opened " << i.first << " (" << i.second.getCost() << ")" << std::endl;
+        }
+    }
 }
 
-void Graph::getKruskalMST(int& mstCost, std::vector<std::string>& vMSTVertices)
+void Graph::getJarnikPrimMST(double& mstCost, std::vector<std::string>& vMSTVertices)
+{
+    std::string rootVertexName;
+    std::cout << "Enter the root vertex : ";
+    std::cin >> rootVertexName;
+
+    while (!vertexExists(rootVertexName))
+    {
+        std::cout << "Vertex " << rootVertexName << " doesn't exist in the graph, please re-enter : ";
+        std::cin >> rootVertexName;
+    }
+
+    // Add the root vertex to the closed set right away.
+    vMSTVertices.push_back(rootVertexName);
+    vertices[rootVertexName].addToClosedSet();
+std::cout << "closed " << rootVertexName << std::endl;
+    unsigned int numClosedVertices = 1;
+
+    std::string newlyClosedVertex = rootVertexName;
+
+    // The 'openSet' priority queue contains vertices currently under consideration for being
+    // added to the closed set.
+    PriorityQueue<Vertex, VertexAssocCostComparator> openSet;
+
+    while (numClosedVertices != numVertices)
+    {
+        updateOpenSet(openSet, newlyClosedVertex);
+
+        // If the open set is empty at this point, then it means that no minimum spanning tree
+        // exists for the graph.
+        if (openSet.isEmpty())
+        {
+            mstCost = -1;
+            vMSTVertices.clear();
+            return;
+        }
+
+        Vertex tmp = openSet.top();
+        openSet.pop();
+
+        newlyClosedVertex = tmp.getName();
+        mstCost += tmp.getAssocCost();
+        vMSTVertices.push_back(newlyClosedVertex);
+
+        vertices[newlyClosedVertex].addToClosedSet();
+std::cout << "closed " << newlyClosedVertex << std::endl;
+        ++numClosedVertices;
+    }
+}
+
+void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertices)
 {
 }

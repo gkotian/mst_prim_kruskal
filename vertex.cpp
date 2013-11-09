@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "vertex.hpp"
 #include "edge.hpp"
@@ -9,7 +10,8 @@ Vertex::Vertex()
 
 Vertex::Vertex(std::string& vertexName) : name(vertexName),
                                           inClosedSet(false),
-                                          inOpenSet(false)
+                                          inOpenSet(false),
+                                          associatedCost(std::numeric_limits<double>::max())
 {
 }
 
@@ -46,7 +48,7 @@ bool Vertex::isInClosedSet() const
     return inClosedSet;
 }
 
-void Vertex::putInClosedSet()
+void Vertex::addToClosedSet()
 {
     inClosedSet = true;
 }
@@ -56,7 +58,29 @@ bool Vertex::isInOpenSet() const
     return inOpenSet;
 }
 
-void Vertex::putInOpenSet()
+void Vertex::addToOpenSet()
 {
     inOpenSet = true;
+}
+
+double Vertex::getAssocCost() const
+{
+    return associatedCost;
+}
+
+void Vertex::setAssocCost(double cost)
+{
+    associatedCost = cost;
+}
+
+#if 0
+const Vertex::std::unordered_map<std::string, Edge>& getEdges()
+{
+    return edges;
+}
+#endif
+
+bool VertexAssocCostComparator::operator()(const Vertex& lhs, const Vertex& rhs) const
+{
+    return (lhs.getAssocCost() < rhs.getAssocCost());
 }

@@ -12,6 +12,7 @@ private:
     std::unordered_map<std::string, Edge> edges;
     bool inClosedSet;
     bool inOpenSet;
+    double associatedCost;
 
 public:
     Vertex();
@@ -22,7 +23,16 @@ public:
     bool edgeExists(const std::string&);
     void showEdges() const;
     bool isInClosedSet() const;
-    void putInClosedSet();
+    void addToClosedSet();
     bool isInOpenSet() const;
-    void putInOpenSet();
+    void addToOpenSet();
+    double getAssocCost() const;
+    void setAssocCost(double);
+    const std::unordered_map<std::string, Edge>& getEdges() { return edges; }
+};
+
+class VertexAssocCostComparator
+{
+public:
+    bool operator()(const Vertex&, const Vertex&) const;
 };

@@ -8,9 +8,8 @@
 int main()
 {
     std::string filename;
-    int mstCost;
+    double mstCost;
     std::vector<std::string> vMSTVertices;
-    std::string rootVertex;
 
     while (1)
     {
@@ -40,9 +39,6 @@ int main()
         // Check if the graph was generated as expected
         g.showEdgeListRepresentation();
 
-        std::cout << "Choose a root vertex for the minimum spanning tree : ";
-        std::cin >> rootVertex;
-
         // Initiliase variables used for MST calculation
         mstCost = 0;
         vMSTVertices.clear();
@@ -50,6 +46,24 @@ int main()
 
         // Get an MST using the Jarnik-Prim algorithm
         g.getJarnikPrimMST(mstCost, vMSTVertices);
+
+        std::cout << "Using Jarnik-Prim algorithm" << std::endl;
+        std::cout << "---------------------------" << std::endl;
+        if (mstCost == -1)
+        {
+            std::cout << "    no minimum spanning tree exists" << std::endl;
+        }
+        else
+        {
+            std::cout << "    MST cost = " << mstCost << std::endl;
+
+            std::cout << "    ";
+            for (auto i : vMSTVertices)
+            {
+                std::cout << i << ", ";
+            }
+            std::cout << std::endl;
+        }
 
         // Initiliase variables used for MST calculation
         mstCost = 0;

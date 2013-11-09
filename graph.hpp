@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "vertex.hpp"
+#include "priority_queue.hpp"
 
 class Graph
 {
@@ -21,6 +22,7 @@ public:
     ~Graph();
     void showEdgeListRepresentation() const;
     void resetMSTSpecificInfo();
-    void getJarnikPrimMST(int&, std::vector<std::string>&);
-    void getKruskalMST(int&, std::vector<std::string>&);
+    void updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator>&, std::string&);
+    void getJarnikPrimMST(double&, std::vector<std::string>&);
+    void getKruskalMST(double&, std::vector<std::string>&);
 };
