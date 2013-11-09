@@ -18,11 +18,11 @@ private:
     bool vertexExists(std::string&);
 
 public:
-    Graph(std::ifstream&);
+    explicit Graph(std::ifstream&);
     ~Graph();
     void showEdgeListRepresentation() const;
     void resetMSTSpecificInfo();
-    void updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator>&, std::string&);
+    void updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator, VertexComparator>&, std::string&);
     void getJarnikPrimMST(double&, std::vector<std::string>&);
     void getKruskalMST(double&, std::vector<std::string>&);
 };

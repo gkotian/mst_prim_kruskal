@@ -2,15 +2,16 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <sstream> // for std::stringstream
+#include <sstream>
 
 #include "graph.hpp"
 #include "vertex.hpp"
 #include "priority_queue.hpp"
 
+// The constructor reads the given input file and creates a graph accordingly.
 Graph::Graph(std::ifstream& fp) : numEdges(0)
 {
-    // The first line contains the number of vertices in the graph
+    // The first line contains the number of vertices in the graph.
     fp >> numVertices;
 
     unsigned int numVerticesNamedInFile = 0;
@@ -24,12 +25,13 @@ Graph::Graph(std::ifstream& fp) : numEdges(0)
         fp >> vertex2;
         fp >> cost;
 
-        // Ensure that we haven't read past the end of file in reading the current line
+        // Ensure that we haven't read past the end of file in reading the current line.
         if (fp.eof())
         {
             break;
         }
 
+        // Add the first vertex to the graph if it hasn't been added already.
         if (!vertexExists(vertex1))
         {
             if (numVerticesNamedInFile < numVertices)
@@ -46,6 +48,7 @@ Graph::Graph(std::ifstream& fp) : numEdges(0)
             }
         }
 
+        // Add the second vertex to the graph if it hasn't been added already.
         if (!vertexExists(vertex2))
         {
             if (numVerticesNamedInFile < numVertices)
@@ -62,6 +65,7 @@ Graph::Graph(std::ifstream& fp) : numEdges(0)
             }
         }
 
+        // Add the edge to the graph if it hasn't been added already.
         if (edgeExists(vertex1, vertex2))
         {
             std::cout << "Request to add duplicate edge between " << vertex1 << " and " << vertex2 << " at line # " << lineNum << "... ignoring" << std::endl;
@@ -75,6 +79,8 @@ Graph::Graph(std::ifstream& fp) : numEdges(0)
         ++lineNum;
     }
 
+    // If the graph has more vertices than had been named in the file, then give some default
+    // names to the unnamed vertices.
     if (numVerticesNamedInFile < numVertices)
     {
         unsigned int numUnnamedVertices = numVertices - numVerticesNamedInFile;
@@ -144,9 +150,13 @@ void Graph::showEdgeListRepresentation() const
 
 void Graph::resetMSTSpecificInfo()
 {
+    for (auto i : vertices)
+    {
+        i.second.resetMSTSpecificInfo();
+    }
 }
 
-void Graph::updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator>& openSet, std::string& newlyClosedVertex)
+void Graph::updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator, VertexComparator>& openSet, std::string& newlyClosedVertex)
 {
     for (auto i : vertices[newlyClosedVertex].getEdges())
     {
@@ -158,8 +168,9 @@ void Graph::updateOpenSet(PriorityQueue<Vertex, VertexAssocCostComparator>& open
         {
             if (i.second.getCost() < vertices[i.first].getAssocCost())
             {
+                openSet.remove(vertices[i.first]);
                 vertices[i.first].setAssocCost(i.second.getCost());
-std::cout << "updated " << i.first << " (" << i.second.getCost() << ")" << std::endl;
+                openSet.push(vertices[i.first]);
             }
         }
         else
@@ -167,7 +178,6 @@ std::cout << "updated " << i.first << " (" << i.second.getCost() << ")" << std::
             vertices[i.first].addToOpenSet();
             vertices[i.first].setAssocCost(i.second.getCost());
             openSet.push(vertices[i.first]);
-std::cout << "opened " << i.first << " (" << i.second.getCost() << ")" << std::endl;
         }
     }
 }
@@ -187,14 +197,13 @@ void Graph::getJarnikPrimMST(double& mstCost, std::vector<std::string>& vMSTVert
     // Add the root vertex to the closed set right away.
     vMSTVertices.push_back(rootVertexName);
     vertices[rootVertexName].addToClosedSet();
-std::cout << "closed " << rootVertexName << std::endl;
     unsigned int numClosedVertices = 1;
 
     std::string newlyClosedVertex = rootVertexName;
 
     // The 'openSet' priority queue contains vertices currently under consideration for being
     // added to the closed set.
-    PriorityQueue<Vertex, VertexAssocCostComparator> openSet;
+    PriorityQueue<Vertex, VertexAssocCostComparator, VertexComparator> openSet;
 
     while (numClosedVertices != numVertices)
     {
@@ -217,7 +226,6 @@ std::cout << "closed " << rootVertexName << std::endl;
         vMSTVertices.push_back(newlyClosedVertex);
 
         vertices[newlyClosedVertex].addToClosedSet();
-std::cout << "closed " << newlyClosedVertex << std::endl;
         ++numClosedVertices;
     }
 }

@@ -21,6 +21,7 @@ int main()
             break;
         }
 
+        // All graph files are kept in a directory called 'graph_files'
         filename = "graph_files/" + filename;
 
         std::ifstream fp(filename);
@@ -37,9 +38,9 @@ int main()
         fp.close();
 
         // Check if the graph was generated as expected
-        g.showEdgeListRepresentation();
+        //g.showEdgeListRepresentation();
 
-        // Initiliase variables used for MST calculation
+        // Initialise variables used for MST calculation
         mstCost = 0;
         vMSTVertices.clear();
         g.resetMSTSpecificInfo();
@@ -51,7 +52,7 @@ int main()
         std::cout << "---------------------------" << std::endl;
         if (mstCost == -1)
         {
-            std::cout << "    no minimum spanning tree exists" << std::endl;
+            std::cout << "    no minimum spanning tree exists for this graph." << std::endl;
         }
         else
         {
@@ -65,11 +66,12 @@ int main()
             std::cout << std::endl;
         }
 
-        // Initiliase variables used for MST calculation
+        // Initialise variables used for MST calculation
         mstCost = 0;
         vMSTVertices.clear();
         g.resetMSTSpecificInfo();
 
+        // Get an MST using Kruskal's algorithm
         g.getKruskalMST(mstCost, vMSTVertices);
     }
 }

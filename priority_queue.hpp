@@ -3,12 +3,13 @@
 #include <vector>
 #include <algorithm>
 
-template <class T, class COMP>
+template <class T, class COMPCOST, class COMPELEM>
 class PriorityQueue
 {
 private:
     std::vector<T> v;
-    COMP compCost;
+    COMPCOST compCost;
+    COMPELEM compElem;
 
 public:
     void push(const T& element)
@@ -31,5 +32,17 @@ public:
     bool isEmpty() const
     {
         return (v.size() == 0);
+    }
+
+    void remove(const T& element)
+    {
+        for (auto i = v.begin(); i != v.end(); ++i)
+        {
+            if (compElem(*i, element))
+            {
+                v.erase(i);
+                break;
+            }
+        }
     }
 };

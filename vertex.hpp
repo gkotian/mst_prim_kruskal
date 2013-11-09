@@ -29,9 +29,16 @@ public:
     double getAssocCost() const;
     void setAssocCost(double);
     const std::unordered_map<std::string, Edge>& getEdges() { return edges; }
+    void resetMSTSpecificInfo();
 };
 
 class VertexAssocCostComparator
+{
+public:
+    bool operator()(const Vertex&, const Vertex&) const;
+};
+
+class VertexComparator
 {
 public:
     bool operator()(const Vertex&, const Vertex&) const;
