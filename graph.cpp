@@ -244,7 +244,6 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
 
     for (auto i : edges)
     {
-        //std::cout << i.second << std::endl;
         bool isInClosedSetV1 = vertices[i.second.getVertex1()].isInClosedSet();
         bool isInClosedSetV2 = vertices[i.second.getVertex2()].isInClosedSet();
 
@@ -260,8 +259,11 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
             }
             else
             {
+                // Adding this edge will join two separate forests, so it can be part of the MST.
                 mstCost += i.second.getCost();
 
+                // Merge the two forests into a single larger forest (retain the smaller forest ID
+                // and release the other).
                 int retainedForestId;
                 int forestIdToReturn;
 
@@ -283,6 +285,7 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
         }
         else if (!isInClosedSetV1 && !isInClosedSetV2)
         {
+            // Both vertices are not closed. This is the beginning of a new forest.
             mstCost += i.second.getCost();
             vertices[i.second.getVertex1()].addToClosedSet();
             vertices[i.second.getVertex2()].addToClosedSet();
@@ -290,7 +293,7 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
             unsigned int newForestId = getNewForestId();
             if (newForestId < 0)
             {
-                std::cout << "Big problem!!" << std::endl;
+                std::cout << "Forest IDs exhausted" << std::endl;
             }
 
             vertices[i.second.getVertex1()].addToForest(newForestId);
@@ -307,6 +310,8 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
         }
         else
         {
+            // One of the vertices is closed, and the other is not. So grab the free floating
+            // vertex into the forest, and make it closed.
             mstCost += i.second.getCost();
 
             if (isInClosedSetV1)
@@ -331,6 +336,7 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
         }
     }
 
+    // If all vertices were not closed, then no MST exists.
     if (numClosedVertices != numVertices)
     {
         mstCost = -1;
