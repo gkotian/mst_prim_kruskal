@@ -13,7 +13,8 @@ Vertex::Vertex()
 Vertex::Vertex(std::string& vertexName) : name(vertexName),
                                           inClosedSet(false),
                                           inOpenSet(false),
-                                          associatedCost(std::numeric_limits<double>::max())
+                                          associatedCost(std::numeric_limits<double>::max()),
+                                          forestId(-1)
 {
 }
 
@@ -24,27 +25,27 @@ std::string Vertex::getName() const
 }
 
 // Function to get the edge cost to the given remote vertex.
-double Vertex::getEdgeCost(const std::string& remoteVertexName)
+double Vertex::getOutgoingEdgeCost(const std::string& remoteVertexName)
 {
-    return edges[remoteVertexName].getCost();
+    return outgoingEdges[remoteVertexName].getCost();
 }
 
 // Function to set the edge cost to the given remote vertex.
-void Vertex::setEdgeCost(const std::string& remoteVertexName, const double cost)
+void Vertex::setOutgoingEdgeCost(const std::string& remoteVertexName, const double cost)
 {
-    edges[remoteVertexName].setCost(cost);
+    outgoingEdges[remoteVertexName].setCost(cost);
 }
 
 // Function to check whether an edge exists or not to the given remote vertex.
-bool Vertex::edgeExists(const std::string& remoteVertexName)
+bool Vertex::outgoingEdgeExists(const std::string& remoteVertexName)
 {
-    return edges.count(remoteVertexName);
+    return outgoingEdges.count(remoteVertexName);
 }
 
 // Function to show edges connected to the vertex along with their associated costs.
-void Vertex::showEdges() const
+void Vertex::showOutgoingEdges() const
 {
-    for (auto i : edges)
+    for (auto i : outgoingEdges)
     {
         std::cout << i.first << "(" << i.second.getCost() << "), ";
     }
@@ -88,11 +89,25 @@ void Vertex::setAssocCost(double cost)
     associatedCost = cost;
 }
 
+// Function to get the forest ID of the vertex.
+// (applicable only to Kruskal's algorithm)
+int Vertex::getForestId() const
+{
+    return forestId;
+}
+
+// Function to set the forest ID of the vertex.
+// (applicable only to Kruskal's algorithm)
+void Vertex::addToForest(int f)
+{
+    forestId = f;
+}
+
 #if 0
 // Function to get the map of edges connected to the vertex.
-const Vertex::std::unordered_map<std::string, Edge>& getEdges()
+const Vertex::std::unordered_map<std::string, OutgoingEdge>& getOutgoingEdges()
 {
-    return edges;
+    return outgoingEdges;
 }
 #endif
 

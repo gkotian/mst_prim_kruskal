@@ -52,7 +52,7 @@ int main()
         std::cout << "---------------------------" << std::endl;
         if (mstCost == -1)
         {
-            std::cout << "    no minimum spanning tree exists for this graph." << std::endl;
+            std::cout << "    no minimum spanning tree exists for this graph.";
         }
         else
         {
@@ -63,8 +63,9 @@ int main()
             {
                 std::cout << i << ", ";
             }
-            std::cout << std::endl;
         }
+
+        std::cout << std::endl << std::endl;
 
         // Initialise variables used for MST calculation
         mstCost = 0;
@@ -73,5 +74,24 @@ int main()
 
         // Get an MST using Kruskal's algorithm
         g.getKruskalMST(mstCost, vMSTVertices);
+
+        std::cout << "Using Kruskal's algorithm" << std::endl;
+        std::cout << "-------------------------" << std::endl;
+        if (mstCost == -1)
+        {
+            std::cout << "    no minimum spanning tree exists for this graph.";
+        }
+        else
+        {
+            std::cout << "    MST cost = " << mstCost << std::endl;
+
+            std::cout << "    ";
+            for (auto i : vMSTVertices)
+            {
+                std::cout << i << ", ";
+            }
+        }
+
+        std::cout << std::endl << std::endl;
     }
 }
