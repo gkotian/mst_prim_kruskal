@@ -142,19 +142,19 @@ void Graph::showEdgeListRepresentation() const
     std::cout << "Number of vertices = " << numVertices << std::endl;
     std::cout << "Number of edges = " << numEdges << std::endl;
 
-    for (auto i = vertices.cbegin(); i != vertices.cend(); ++i)
+    for (const auto i : vertices)
     {
-        std::cout << i->first << " : ";
-        i->second.showOutgoingEdges();
+        std::cout << i.first << " : ";
+        i.second.showOutgoingEdges();
         std::cout << std::endl;
     }
 }
 
 void Graph::resetMSTSpecificInfo()
 {
-    for (auto i : vertices)
+    for (auto& i : vertices)
     {
-        vertices[i.second.getName()].resetMSTSpecificInfo();
+        i.second.resetMSTSpecificInfo();
     }
 }
 
@@ -346,11 +346,11 @@ void Graph::getKruskalMST(double& mstCost, std::vector<std::string>& vMSTVertice
 
 void Graph::combineForests(int newForestId, int oldForestId)
 {
-    for (auto i : vertices)
+    for (auto& i : vertices)
     {
         if (i.second.getForestId() == oldForestId)
         {
-            vertices[i.second.getName()].addToForest(newForestId);
+            i.second.addToForest(newForestId);
         }
     }
 }

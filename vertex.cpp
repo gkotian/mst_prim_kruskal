@@ -45,7 +45,7 @@ bool Vertex::outgoingEdgeExists(const std::string& remoteVertexName)
 // Function to show edges connected to the vertex along with their associated costs.
 void Vertex::showOutgoingEdges() const
 {
-    for (auto i : outgoingEdges)
+    for (const auto i : outgoingEdges)
     {
         std::cout << i.first << "(" << i.second.getCost() << "), ";
     }
