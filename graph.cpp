@@ -21,9 +21,7 @@ Graph::Graph(std::ifstream& fp) : numEdges(0)
 
     while (!fp.eof())
     {
-        fp >> vertex1;
-        fp >> vertex2;
-        fp >> cost;
+        fp >> vertex1 >> vertex2 >> cost;
 
         // Ensure that we haven't read past the end of file in reading the current line.
         if (fp.eof())
