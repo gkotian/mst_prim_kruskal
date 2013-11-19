@@ -103,13 +103,11 @@ void Vertex::addToForest(int f)
     forestId = f;
 }
 
-#if 0
 // Function to get the map of edges connected to the vertex.
-const Vertex::std::unordered_map<std::string, OutgoingEdge>& getOutgoingEdges()
+const std::unordered_map<std::string, OutgoingEdge>& Vertex::getOutgoingEdges() const
 {
     return outgoingEdges;
 }
-#endif
 
 // Function to reset all information in the vertex object specific to MST computation.
 void Vertex::resetMSTSpecificInfo()

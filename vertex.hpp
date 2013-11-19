@@ -31,7 +31,7 @@ public:
     void setAssocCost(double);
     int getForestId() const;
     void addToForest(int);
-    const std::unordered_map<std::string, OutgoingEdge>& getOutgoingEdges() { return outgoingEdges; }
+    const std::unordered_map<std::string, OutgoingEdge>& getOutgoingEdges() const;
     void resetMSTSpecificInfo();
 };
 
